@@ -1,7 +1,7 @@
 /*
  *  Pull-Up Resistor Configuration
  *
- *  Created on: Jan 30, 2023
+ *  Created on: Jan 31, 2023
  *      Author: Russell Trafford
  *      Version: 1.0
  *
@@ -32,10 +32,10 @@ int main(void)
 
     while(1)
     {
-        if (P2IN & BIT3)            // If S2 (P2.3) is pressed
-            P6OUT ^= BIT6;          // Toggle P6.6
-        if (P4IN & BIT1)            // If S1 (P4.1) is pressed
-            P1OUT ^= BIT0;          // Toggle P1.0
+        if (!(P2IN & BIT3))           // If S2 (P2.3) is pressed
+            P6OUT ^= BIT6;            // Toggle P6.6
+        if (!(P4IN & BIT1))           // If S1 (P4.1) is pressed
+            P1OUT ^= BIT0;            // Toggle P1.0
         __delay_cycles(100000);             // Delay for 100000*(1/MCLK)=0.1s
     }
 
@@ -66,4 +66,5 @@ void gpioInit()
 
        P4REN |= BIT1;               // Enable Resistor on P4.1
        P4OUT |= BIT1;               // Configure Resistor on P4.1 to be Pullup
+
 }
