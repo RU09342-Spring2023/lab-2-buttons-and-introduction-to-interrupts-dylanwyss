@@ -1,7 +1,7 @@
 # Buttons and Pullup/Pulldown Resistors
-- [ ] 1. Read up on Pullup and Pulldown Resistors
-- [ ] 2. Import and Link the Part1.c file into Code Composer
-- [ ] 3. **Deliverable TASK:** Modify the Part1.c file to make the LEDS Toggle/Blink when the buttons are pressed only
+- [x] 1. Read up on Pullup and Pulldown Resistors
+- [x] 2. Import and Link the Part1.c file into Code Composer
+- [x] 3. **Deliverable TASK:** Modify the Part1.c file to make the LEDS Toggle/Blink when the buttons are pressed only
 
 ## Buttons and Floating Inputs
 For reasons, the buttons on your launchpad have been left as a simple button connected to ground with no pull up resistor. This will lead you to have issues trying to use them. This is a summary of why you are probably having issues, and the ways around getting the buttons to work (note, they are not broken).
