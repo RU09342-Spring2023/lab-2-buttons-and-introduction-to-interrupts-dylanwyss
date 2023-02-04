@@ -14,8 +14,8 @@
 
 int main(void)
 {
-    char state = ARMED_STATE;
-    int count_seconds = 0;
+    char state = ARMED_STATE;               // initialized state
+    int count_seconds = 0;                  // variable to count 10 seconds in warning state
     WDTCTL = WDTPW | WDTHOLD;               // Stop watchdog timer
 
     // Setting pin directions
@@ -39,41 +39,41 @@ int main(void)
         switch(state)
         {
         case ARMED_STATE:
-            count_seconds = 0;
-            if (P2IN & BIT3)
+            count_seconds = 0;                  // reset counting value to 0
+            if (P2IN & BIT3)                    // if person not detected
             {
                 P6OUT ^= BIT6;                  // Toggle Green LED
                 P1OUT &= ~BIT0;                 // Turn Red LED off
-                __delay_cycles(1500000);             // Delay for 1500000*(1/MCLK)=1.5s or blinking every 3 seconds
+                __delay_cycles(1500000);        // Delay for 1500000*(1/MCLK)=1.5s or blinking every 3 seconds
             }
-            else
+            else                                // if person is detected
             {
-                state = WARNING_STATE;
+                state = WARNING_STATE;          // move into warning state
             }
             break;
         case WARNING_STATE:
-            if ((!(P2IN & BIT3)) & (!(count_seconds == 20)))
+            if ((!(P2IN & BIT3)) & (!(count_seconds == 20)))     // if person is detected but not 10 seconds after moving into state
             {
                 P1OUT ^= BIT0;                  // Toggle Red LED
                 P6OUT &= ~BIT6;                 // Turn Green LED off
-                count_seconds++;
-                __delay_cycles(500000);             // Delay for 500000*(1/MCLK)=0.5s or blinking every 1 second
+                count_seconds++;                // increase value by 1 every 0.5 seconds
+                __delay_cycles(500000);         // Delay for 500000*(1/MCLK)=0.5s or blinking every 1 second
             }
-            else if ((!(P2IN & BIT3)) & (count_seconds == 20))
+            else if ((!(P2IN & BIT3)) & (count_seconds == 20))   // if person is detected and 10 seconds after moving into state
             {
-                state = ALERT_STATE;
+                state = ALERT_STATE;            // move into alert state
             }
-            else if (P2IN & BIT3)
+            else if (P2IN & BIT3)                                // if person is not detected
             {
-                state = ARMED_STATE;
+                state = ARMED_STATE;            // move back to armed state
             }
             break;
         case ALERT_STATE:
-            if (!(P4IN & BIT1))
+            if (!(P4IN & BIT1))                 // if reset button is pressed
             {
-                state = ARMED_STATE;
+                state = ARMED_STATE;            // move back to armed state
             }
-            else
+            else                                // if reset is not pressed
             {
                 P1OUT |= BIT0;                  // Turn Red LED on
             }
