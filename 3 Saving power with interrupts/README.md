@@ -76,6 +76,6 @@ Then load up Energy Trace and perform the similar capture of Power with the LED 
 
 
 # Screenshots and Answers to Questions
-![Polling](C:\Users\dylan\OneDrive\Pictures\Screenshots\EmbeddedLab2-Part3-Polling.png)
-![Polling](C:\Users\dylan\OneDrive\Pictures\Screenshots\EmbeddedLab2-Part3-Interrupt.png)
+![Polling](file:///C:/Users/dylan/Downloads/EmbeddedLab2-Part3-Polling.pdf)
+![Polling](file:///C:/Users/dylan/Downloads/EmbeddedLab2-Part3-Interrupt.pdf)
 
