@@ -76,5 +76,13 @@ Then load up Energy Trace and perform the similar capture of Power with the LED 
 
 
 # Screenshots and Answers to Questions
+## Screenshots
+Power Consumption with Polling:
 ![EmbeddedLab2-Part3-Polling](https://user-images.githubusercontent.com/122934597/216787187-9ed9791e-70f8-40fb-b6a8-137f741e3629.png)
+
+Power Consumption with Interrupt:
 ![EmbeddedLab2-Part3-Interrupt](https://user-images.githubusercontent.com/122934597/216787249-8d450017-9a6d-47a5-9d4c-1c3c00abb20a.png)
+
+## Answers to Questions
+1. The baseline in the polling example is higher than that of the interrupt example because the polling example sets the LED to be high when the button to be pressed and low when the button is not pressed. Meanwhile, the interrupt example only has a change in consumed power when the interrupt is initiated, or when the button is pressed.
+2. Even when the LED is unplugged, there is still an increase in power when the button is pressed because the pull-up resistor included in the button press still causes power to be consumed.
