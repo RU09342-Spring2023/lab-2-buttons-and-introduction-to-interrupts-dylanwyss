@@ -78,7 +78,7 @@ Then load up Energy Trace and perform the similar capture of Power with the LED 
 # Screenshots and Answers to Questions
 ## Screenshots
 Power Consumption with Polling:
-![EmbeddedLab2-Part3-Polling](https://user-images.githubusercontent.com/122934597/216787187-9ed9791e-70f8-40fb-b6a8-137f741e3629.png)
+![EmbeddedLab2-Part3-Polling](https://user-images.githubusercontent.com/122934597/216793122-57e589c9-fdc9-4fa5-8e02-9557152d3ee5.png)
 
 Power Consumption with Interrupt:
 ![EmbeddedLab2-Part3-Interrupt](https://user-images.githubusercontent.com/122934597/216787249-8d450017-9a6d-47a5-9d4c-1c3c00abb20a.png)
