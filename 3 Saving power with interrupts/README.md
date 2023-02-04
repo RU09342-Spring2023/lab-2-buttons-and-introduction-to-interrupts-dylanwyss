@@ -76,5 +76,5 @@ Then load up Energy Trace and perform the similar capture of Power with the LED 
 
 
 # Screenshots and Answers to Questions
-![Polling](/../<C:\Users\dylan\OneDrive\Pictures\Screenshots\EmbeddedLab2-Part3-Polling.png>/path/to/image.png?raw=true "Power Consumption With Polling")
+![image](C:\Users\dylan\OneDrive\Pictures\Screenshots\EmbeddedLab2-Part3-Polling.png)
 ![Interrupt](/../<C:\Users\dylan\OneDrive\Pictures\Screenshots\EmbeddedLab2-Part3-Interrupt.png>/path/to/image.png?raw=true "Power Consumption With Interrupt")
