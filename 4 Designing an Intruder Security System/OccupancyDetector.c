@@ -21,9 +21,7 @@ int main(void)
     // Setting pin directions
     P1DIR |= BIT0;               // Configure P1.0 to an Output
     P6DIR |= BIT6;               // Configure P6.6 to an Output
-    P2DIR &= ~BIT3;              // Configure P2.3 to an Input
-    P2REN |= BIT3;               // Enable Resistor on P2.3
-    P2OUT |= BIT3;               // Configure Resistor on P2.3 to be Pullup
+    P2DIR &= ~BIT5;              // Configure P2.5 to an Input <- the pin that the sensor is plugged into
     P4DIR &= ~BIT1;              // Configure P4.1 to an Input
     P4REN |= BIT1;               // Enable Resistor on P4.1
     P4OUT |= BIT1;               // Configure Resistor on P4.1 to be Pullup
@@ -40,7 +38,7 @@ int main(void)
         {
         case ARMED_STATE:
             count_seconds = 0;                  // reset counting value to 0
-            if (P2IN & BIT3)                    // if person not detected
+            if (!(P2IN & BIT5))                    // if person not detected
             {
                 P6OUT ^= BIT6;                  // Toggle Green LED
                 P1OUT &= ~BIT0;                 // Turn Red LED off
@@ -52,18 +50,18 @@ int main(void)
             }
             break;
         case WARNING_STATE:
-            if ((!(P2IN & BIT3)) & (!(count_seconds == 20)))     // if person is detected but not 10 seconds after moving into state
+            if ((P2IN & BIT5) && (!(count_seconds == 20)))     // if person is detected but not 10 seconds after moving into state
             {
                 P1OUT ^= BIT0;                  // Toggle Red LED
                 P6OUT &= ~BIT6;                 // Turn Green LED off
                 count_seconds++;                // increase value by 1 every 0.5 seconds
                 __delay_cycles(500000);         // Delay for 500000*(1/MCLK)=0.5s or blinking every 1 second
             }
-            else if ((!(P2IN & BIT3)) & (count_seconds == 20))   // if person is detected and 10 seconds after moving into state
+            else if ((P2IN & BIT5) && (count_seconds == 20))   // if person is detected and 10 seconds after moving into state
             {
                 state = ALERT_STATE;            // move into alert state
             }
-            else if (P2IN & BIT3)                                // if person is not detected
+            else if (!(P2IN & BIT5))                                // if person is not detected
             {
                 state = ARMED_STATE;            // move back to armed state
             }
