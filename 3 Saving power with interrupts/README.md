@@ -81,7 +81,7 @@ Power Consumption with Polling:
 ![EmbeddedLab2-Part3-Polling](https://user-images.githubusercontent.com/122934597/216793122-57e589c9-fdc9-4fa5-8e02-9557152d3ee5.png)
 
 Power Consumption with Interrupt:
-![EmbeddedLab2-Part3-Interrupt](https://user-images.githubusercontent.com/122934597/216787249-8d450017-9a6d-47a5-9d4c-1c3c00abb20a.png)
+![EmbeddedLab2-Part3-Interrupt](https://user-images.githubusercontent.com/122934597/216793156-f2baf0a8-b194-4d5f-8219-cad608ea42c6.png)
 
 ## Answers to Questions
 1. The baseline in the polling example is higher than that of the interrupt example because the polling example sets the LED to be high when the button to be pressed and low when the button is not pressed. Meanwhile, the interrupt example only has a change in consumed power when the interrupt is initiated, or when the button is pressed.
