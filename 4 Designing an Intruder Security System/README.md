@@ -5,8 +5,8 @@ The purpose of this lab is to explore the input functionality of the Microproces
 Each of the following bullet items are in their own numeric folder and meant to go in order.
 
 To complete this assignment, you will need to:
-- [ ] 1. Investigate the Buttons on the Launchpad and configure Pullup/Pulldown Resistors for them to work correctly.
-- [ ] 2. Learn about the Interrupt Routine and how it interfaces with your software.
-- [ ] 3. Use Interrupts to implement the alternative blinking LED example from Lab 1
-- [ ] 4. Explore how interrupts can be used to save power versus polling.
-- [ ] 5. Design the Intruder Security System
+- [x] 1. Investigate the Buttons on the Launchpad and configure Pullup/Pulldown Resistors for them to work correctly.
+- [x] 2. Learn about the Interrupt Routine and how it interfaces with your software.
+- [x] 3. Use Interrupts to implement the alternative blinking LED example from Lab 1
+- [x] 4. Explore how interrupts can be used to save power versus polling.
+- [x] 5. Design the Intruder Security System
