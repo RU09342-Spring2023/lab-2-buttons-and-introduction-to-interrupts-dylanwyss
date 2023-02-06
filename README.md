@@ -1,53 +1,94 @@
 # Part 4: Occupancy Detection and Alert System
-You are being asked to design a rudimentary occupancy alert system with the following behavior:
-- The system when turned on needs to blink the Green LED once every 3 seconds to show it is armed.
-- When the occupancy sensor detects someone, it will output a Logic 1, and your system needs to move into a "Warning" state, where the Green LED stops blinking, and the Red LED Blinks once per second (500ms on, 500ms off).
-- If the occupancy detector still shows someone there after 10 seconds, your system should indicate this with the RED Led constantly staying on, and move into the ALERT state.
-- If the occupancy detector **before** the 15 seconds goes back to a 0, indicating the room is now empty, then the system should go back to the armed state.
-- When in the ALERT State, the only way for the system to go back to the Armed state is to press the P4.1 Button.
-
-## Occupancy Sensor
-You will be **first** *emulating* the Occupancy Sensor with the P4.1 button. This can be used for pretty much all of your testing and design.
-
-When you have a design that is working, you can then test your code with a [Passive Infrared Occupancy Detector](https://www.amazon.com/DIYmall-HC-SR501-Motion-Infrared-Arduino/dp/B012ZZ4LPM)
-
-## Getting Started
-I highly recommend on paper or a whiteboard drawing up a state machine or something to help understand the flow of the system.
-
-From there, you should work on each stage/state and see if the transitions work. For example, can you get the system to go from the armed state to the warning state.
-
-Remember that your code is going to be running in a loop, so you need to make sure you consider how this is going to work when trying to blink the LEDs.
-
-## Do I need to use Interrupts?
-Well, it would be cool, but at the end of the day, we are asking you for a design. Start with polling or what you feel comfortable with, but we would like you to try out using the interrupts, maybe at least for the system Disarm Button.
-
-## Navigating multiple states
-One way to approach a system with multiple states is to actually use a case statement in your main loop. For example:
+The Occupancy Detection program begins by defining the three states that are present within the system as well as including the MSP430 library.
 ```c
+// States used for alarm system
 #define ARMED_STATE 0
 #define WARNING_STATE 1
 #define ALERT_STATE 2
 
-// Put some initialization here
+#include <msp430.h>
+```
 
-char state = ARMED_STATE;
-
-while(1)
+Next, inside the main function, the basic initializations and configurations are performed. The system is initialized to the armed state. The variable that counts how many seconds the system is in the warning state is inialized to zero. The watchdog timer is included. The inputs and outputs are configured properly. Each LED is initialized to an output state.
+```c
+int main(void)
 {
-  switch (state) {
-    case ARMED_STATE:
+    char state = ARMED_STATE;               // initialized state
+    int count_seconds = 0;                  // variable to count 10 seconds in warning state
+    WDTCTL = WDTPW | WDTHOLD;               // Stop watchdog timer
+
+    // Setting pin directions
+    P1DIR |= BIT0;               // Configure P1.0 to an Output
+    P6DIR |= BIT6;               // Configure P6.6 to an Output
+    P2DIR &= ~BIT5;              // Configure P2.5 to an Input <- the pin that the sensor is plugged into
+    P4DIR &= ~BIT1;              // Configure P4.1 to an Input
+    P4REN |= BIT1;               // Enable Resistor on P4.1
+    P4OUT |= BIT1;               // Configure Resistor on P4.1 to be Pullup
+
+    P1OUT &= ~BIT0;              // Initialize Red LED to off state
+    P6OUT &= ~BIT6;              // Initialize Green LED to off state
+
+    PM5CTL0 &= ~LOCKLPM5;                   // Disable the GPIO power-on default high-impedance mode
+                                            // to activate previously configured port settings
+```
+
+In the while loop, a switch statement is used for what is performed in each state. First, for the armed state, if a person is not detected, the green LED will toggle on and off, blinking on every 3 seconds while the red LED is constantly turned off. If, however, a person is detected, the system will move into the warning state.
+```c
+    while(1)
     {
-      // Do something in the ARMED state
-      // If something happens, you can move into the WARNING_STATE
-      // state = WARNING_STATE
+        switch(state)
+        {
+        case ARMED_STATE:
+            count_seconds = 0;                  // reset counting value to 0
+            if (!(P2IN & BIT5))                    // if person not detected
+            {
+                P6OUT ^= BIT6;                  // Toggle Green LED
+                P1OUT &= ~BIT0;                 // Turn Red LED off
+                __delay_cycles(1500000);        // Delay for 1500000*(1/MCLK)=1.5s or blinking every 3 seconds
+            }
+            else                                // if person is detected
+            {
+                state = WARNING_STATE;          // move into warning state
+            }
+            break;
+```
+
+Second is the warning state. If a person is not detected at any point, the system will move back into the armed state. However, if a person is detected, there are one of two options that will be taken. If it has been ten seconds since moving to the warning state, then the system will move into the alert state. If it has not been ten seconds, the red LED will toggle on and off, blinking every 1 second while the green LED is constantly off. Additonally, the variable count_seconds, which counts how many seconds it has been since moving to this state increases by 1 every half-second. Therefore, when this variable reaches 20 and a person is still detected, the system will move to the armed state.
+```c
+        case WARNING_STATE:
+            if ((P2IN & BIT5) && (!(count_seconds == 20)))     // if person is detected but not 10 seconds after moving into state
+            {
+                P1OUT ^= BIT0;                  // Toggle Red LED
+                P6OUT &= ~BIT6;                 // Turn Green LED off
+                count_seconds++;                // increase value by 1 every 0.5 seconds
+                __delay_cycles(500000);         // Delay for 500000*(1/MCLK)=0.5s or blinking every 1 second
+            }
+            else if ((P2IN & BIT5) && (count_seconds == 20))   // if person is detected and 10 seconds after moving into state
+            {
+                state = ALERT_STATE;            // move into alert state
+            }
+            else if (!(P2IN & BIT5))                                // if person is not detected
+            {
+                state = ARMED_STATE;            // move back to armed state
+            }
+            break;
+```
+
+Last is the alert state. If the reset button is pressed, the system will return to the armed state. If, however, this button is not pressed, the red LED will constantly be on to show that the alert is active. For the case of a real security system, this is the point where the local authorities would be alerted.
+```c
+        case ALERT_STATE:
+            if (!(P4IN & BIT1))                 // if reset button is pressed
+            {
+                state = ARMED_STATE;            // move back to armed state
+            }
+            else                                // if reset is not pressed
+            {
+                P1OUT |= BIT0;                  // Turn Red LED on
+            }
+            break;
+        }
     }
-    case WARNING_STATE:
-    {
-      // Do something in the WARNING_STATE
-    }
-  }
 }
 ```
 
-## Submission
-There is a sample file in this folder you will need to import into your Code Composer and work on. You will need to submit that file, documented well, and a README.md file (you can replace this one) with the documentation that tells someone about what the code is, what it does, how it works etc. For an audience for your README, imagine you at the beginning of the lab, looking for code which does, well, this. 
+The implementation of this occupancy detection system is rather simple as it uses polling rather that interputs. In the future, I would like to try to implement this system while using interrupts as it would be good practice.
