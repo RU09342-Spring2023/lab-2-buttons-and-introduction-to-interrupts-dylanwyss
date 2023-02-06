@@ -32,7 +32,7 @@ int main(void)
                                             // to activate previously configured port settings
 ```
 
-In the while loop, a switch statement is used for what is performed in each state. First, for the armed state, if a person is not detected, the green LED will toggle on and off, blinking on every 3 seconds while the red LED is constantly turned off. If, however, a person is detected, the system will move into the warning state.
+In the while loop, a switch statement is used for what is performed in each state. First, for the armed state, if a person is not detected, the green LED will toggle on and off, blinking on every 3 seconds while the red LED is constantly turned off. However, if a person is detected, the system will move into the warning state.
 ```c
     while(1)
     {
@@ -53,7 +53,7 @@ In the while loop, a switch statement is used for what is performed in each stat
             break;
 ```
 
-Second is the warning state. If a person is not detected at any point, the system will move back into the armed state. However, if a person is detected, there are one of two options that will be taken. If it has been ten seconds since moving to the warning state, then the system will move into the alert state. If it has not been ten seconds, the red LED will toggle on and off, blinking every 1 second while the green LED is constantly off. Additonally, the variable count_seconds, which counts how many seconds it has been since moving to this state increases by 1 every half-second. Therefore, when this variable reaches 20 and a person is still detected, the system will move to the armed state.
+Second is the warning state. If a person is not detected at any point, the system will move back into the armed state. However, if a person is detected, there are one of two options that will be taken. If it has been ten seconds since moving to the warning state, then the system will move into the alert state. If it has not been ten seconds, the red LED will toggle on and off, blinking every 1 second while the green LED is constantly off. Additonally, the variable count_seconds, which counts how many seconds it has been since moving to this state, increases by 1 every half-second. Therefore, when this variable reaches 20 and a person is still detected, the system will move to the armed state as it has been 20 half-seconds, or 10 seconds.
 ```c
         case WARNING_STATE:
             if ((P2IN & BIT5) && (!(count_seconds == 20)))     // if person is detected but not 10 seconds after moving into state
